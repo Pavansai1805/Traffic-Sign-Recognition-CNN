@@ -85,36 +85,53 @@ if not MODEL_PATH.exists() or not LABELS_PATH.exists():
     st.error("Model files are missing from the repository.")
     st.stop()
 
-uploaded_file = st.file_uploader(
-    "Choose a traffic sign image",
+
+uploaded_files = st.file_uploader(
+    "Choose traffic sign images",
     type=["png", "jpg", "jpeg"],
+    accept_multiple_files=True,
 )
 
-if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Uploaded traffic sign", width=350)
+if uploaded_files:
+    model, index_to_class = load_model_and_labels()
 
-    if st.button("Predict Traffic Sign", type="primary"):
-        with st.spinner("Analyzing image..."):
-            model, index_to_class = load_model_and_labels()
+    for uploaded_file in uploaded_files:
+        image = Image.open(uploaded_file).convert("RGB")
 
-            resized = image.resize((30, 30))
-            array = np.asarray(resized, dtype=np.float32) / 255.0
-            predictions = model.predict(
-                np.expand_dims(array, axis=0), verbose=0
-            )[0]
-
-            predicted_index = int(np.argmax(predictions))
-            class_id = index_to_class[predicted_index]
-            confidence = float(predictions[predicted_index]) * 100
-
-        st.success("Prediction completed!")
-        st.subheader(SIGN_NAMES.get(class_id, f"Class {class_id}"))
-        st.metric("Prediction confidence", f"{confidence:.2f}%")
-        st.caption(
-            "Confidence is the model's estimated probability, "
-            "not a guarantee that the prediction is correct."
+        st.divider()
+        st.image(
+            image,
+            caption=f"Uploaded image: {uploaded_file.name}",
+            width=250,
         )
+
+        if st.button(
+            f"Predict {uploaded_file.name}",
+            key=f"predict_{uploaded_file.name}",
+            type="primary",
+        ):
+            with st.spinner("Analyzing image..."):
+                resized = image.resize((30, 30))
+                array = np.asarray(resized, dtype=np.float32) / 255.0
+
+                predictions = model.predict(
+                    np.expand_dims(array, axis=0),
+                    verbose=0,
+                )[0]
+
+                predicted_index = int(np.argmax(predictions))
+                class_id = index_to_class[predicted_index]
+                confidence = float(predictions[predicted_index]) * 100
+
+            st.success("Prediction completed!")
+            st.subheader(
+                SIGN_NAMES.get(class_id, f"Class {class_id}")
+            )
+            st.metric("Prediction confidence", f"{confidence:.2f}%")
+            st.caption(
+                "Confidence is the model's estimated probability, "
+                "not a guarantee that the prediction is correct."
+            )
 
 st.divider()
 st.caption(
