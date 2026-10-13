@@ -122,6 +122,8 @@ if uploaded_files:
                 predicted_index = int(np.argmax(predictions))
                 class_id = index_to_class[predicted_index]
                 confidence = float(predictions[predicted_index]) * 100
+                st.write("Debug - Predicted output index:", predicted_index)
+                st.write("Debug - Mapped class ID:", class_id)
 
             st.success("Prediction completed!")
             st.subheader(
