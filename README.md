@@ -70,7 +70,29 @@ Traffic-Sign-Recognition-CNN/
    ```bash
    python src/predict.py "path/to/traffic_sign_image.png"
    ```
+## 🚀 Live Demo
 
+Try the deployed Traffic Sign Recognition application here:
+
+**[Open Traffic Sign Recognition Web App](https://traffic-sign-recognition-cnn-jxnozgw4vnddpdetkobugj.streamlit.app/)**
+
+Upload a traffic sign image to see the CNN model's prediction and estimated confidence.
+
+## 🛠️ Technologies Used
+
+- Python
+- TensorFlow / Keras
+- Convolutional Neural Network (CNN)
+- NumPy
+- Streamlit
+- Pillow
+
+## 📊 Model Performance
+
+- Test Accuracy: 93.74%
+- Number of Classes: 43
+
+*Note: Predictions on individual images may be incorrect. This project is for educational demonstration only.*
 ## Future Improvements
 - Improve model accuracy through hyperparameter tuning.
 - Add a user-friendly web interface.
